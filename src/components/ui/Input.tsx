@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef, useImperativeHandle } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -20,10 +20,29 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       required,
       icon,
       className,
+      type,
+      onClick,
       ...props
     },
     ref
   ) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
+
+    const handleContainerOrIconClick = () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        if (type === 'date') {
+          try {
+            inputRef.current.showPicker();
+          } catch (e) {
+            // Fallback for older browsers
+          }
+        }
+      }
+    };
+
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
@@ -35,15 +54,28 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative flex items-center">
           {icon && (
-            <div className="absolute left-3.5 text-slate-400 pointer-events-none">
+            <div
+              onClick={handleContainerOrIconClick}
+              className="absolute left-3.5 text-slate-400 cursor-pointer z-10 hover:text-teal-500 transition-colors"
+            >
               {icon}
             </div>
           )}
           <input
-            ref={ref}
+            ref={inputRef}
+            type={type}
+            onClick={(e) => {
+              if (type === 'date') {
+                try {
+                  e.currentTarget.showPicker();
+                } catch (err) {}
+              }
+              if (onClick) onClick(e);
+            }}
             className={cn(
-              'w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all focus:outline-none placeholder:text-slate-400',
+              'w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all focus:outline-none placeholder:text-slate-400 cursor-pointer',
               icon && 'pl-10',
+              type === 'date' && 'scheme-dark dark:scheme-dark',
               error
                 ? 'border-rose-500 focus:ring-2 focus:ring-rose-500/20 bg-rose-50/20'
                 : isActiveField
