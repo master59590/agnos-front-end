@@ -11,7 +11,7 @@ import { useRealtimeSync } from '@/hooks/useRealtimeSync';
 import { RealtimeSyncPayload } from '@/types/realtime';
 import { PatientRecord } from '@/types/patient';
 import { generatePatientId } from '@/lib/utils';
-import { Home, ExternalLink, RefreshCw } from 'lucide-react';
+import { Home, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export default function StaffPage() {
@@ -89,7 +89,8 @@ export default function StaffPage() {
 
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+      {/* Background Dashboard Elements marked no-print */}
+      <div className="max-w-7xl mx-auto no-print">
         {/* Top Navbar */}
         <div className="flex items-center justify-between mb-6 text-xs text-slate-500">
           <a

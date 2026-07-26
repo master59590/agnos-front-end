@@ -24,7 +24,7 @@ body {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 15mm;
+    margin: 10mm;
   }
 
   body {
@@ -34,26 +34,46 @@ body {
     print-color-adjust: exact;
   }
 
-  /* Hide everything except the dedicated print container */
-  body > * {
+  /* Hide elements marked no-print */
+  .no-print,
+  button,
+  header,
+  footer,
+  nav {
     display: none !important;
   }
 
-  #printable-medical-record {
+  /* Unset fixed modal layout for print */
+  .fixed.inset-0 {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
     display: block !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
+    overflow: visible !important;
+  }
+
+  .max-w-lg,
+  .max-w-md,
+  .max-w-7xl,
+  .max-h-\[90vh\] {
+    max-width: 100% !important;
+    max-height: none !important;
     width: 100% !important;
-    background: #ffffff !important;
-    color: #000000 !important;
-    box-shadow: none !important;
     border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    overflow: visible !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  .no-print {
-    display: none !important;
+  .printable-document {
+    display: block !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 }
