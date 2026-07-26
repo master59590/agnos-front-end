@@ -30,14 +30,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
-    const handleContainerOrIconClick = () => {
+    const handleIconClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
       if (inputRef.current) {
         inputRef.current.focus();
         if (type === 'date') {
           try {
             inputRef.current.showPicker();
-          } catch (e) {
-            // Fallback for older browsers
+          } catch (err) {
+            // Fallback for older browser engines
           }
         }
       }
@@ -54,28 +55,23 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative flex items-center">
           {icon && (
-            <div
-              onClick={handleContainerOrIconClick}
-              className="absolute left-3.5 text-slate-400 cursor-pointer z-10 hover:text-teal-500 transition-colors"
+            <button
+              type="button"
+              onClick={handleIconClick}
+              title="Click to open calendar picker"
+              className="absolute left-3 text-slate-400 hover:text-teal-500 z-10 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none"
             >
               {icon}
-            </div>
+            </button>
           )}
           <input
             ref={inputRef}
             type={type}
-            onClick={(e) => {
-              if (type === 'date') {
-                try {
-                  e.currentTarget.showPicker();
-                } catch (err) {}
-              }
-              if (onClick) onClick(e);
-            }}
+            onClick={onClick}
             className={cn(
-              'w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all focus:outline-none placeholder:text-slate-400 cursor-pointer',
-              icon && 'pl-10',
-              type === 'date' && 'scheme-dark dark:scheme-dark',
+              'w-full px-3.5 py-2.5 bg-white dark:bg-slate-900 border text-slate-900 dark:text-slate-100 rounded-xl text-sm transition-all focus:outline-none placeholder:text-slate-400 font-sans',
+              icon && 'pl-11',
+              type === 'date' && 'scheme-dark dark:scheme-dark cursor-text',
               error
                 ? 'border-rose-500 focus:ring-2 focus:ring-rose-500/20 bg-rose-50/20'
                 : isActiveField
